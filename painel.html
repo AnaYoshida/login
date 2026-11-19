@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Área Restrita Pedagógica - Demonstração de Autorização e Acesso Negado - Escola do Futuro">
+    <title>Escola do Futuro — Área Restrita (Controle de Acesso)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ==========================================================================
+           Design System Oficial - ESCOLA DO FUTURO
+           EE Antonio Reginato - Painel de Área Restrita Pedagógica
+           ========================================================================== */
+        :root {
+            --sf-bg-canvas: #0f172a;
+            --sf-bg-card: #ffffff;
+            --sf-text-primary: #0b2545;
+            --sf-text-dark: #1e293b;
+            --sf-text-muted: #64748b;
+            --sf-text-light: #94a3b8;
+            --sf-brand-blue: #0f4c81;
+            --sf-brand-blue-hover: #0a3760;
+            --sf-accent-blue: #0284c7;
+            --sf-active-bg: #e0ecfb;
+            --sf-pill-bg: #eef2f6;
+            --sf-accent-red: #dc2626;
+            --sf-accent-red-bg: #fef2f2;
+            --sf-accent-red-border: #fecaca;
+            --sf-success-green: #10b981;
+            --sf-success-green-bg: #ecfdf5;
+            --sf-success-green-border: #a7f3d0;
+            --sf-warning-yellow: #f59e0b;
+            --sf-border-color: #e2e8f0;
+            --sf-radius-sm: 6px;
+            --sf-radius-md: 10px;
+            --sf-radius-lg: 16px;
+            --sf-radius-pill: 50px;
+            --sf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --sf-shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+            --sf-shadow-lg: 0 12px 30px rgba(15, 23, 42, 0.20);
+            --transition-fast: 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--sf-text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 760px;
+            background-color: var(--sf-bg-card);
+            border-radius: var(--sf-radius-lg);
+            box-shadow: var(--sf-shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: var(--transition-fast);
+        }
+
+        /* Top Bar com gradiente de status */
+        .status-top-bar {
+            height: 7px;
+            background: #94a3b8;
+            transition: var(--transition-fast);
+        }
+
+        .status-top-bar.granted {
+            background: linear-gradient(90deg, #10b981, #0284c7);
+        }
+
+        .status-top-bar.denied {
+            background: linear-gradient(90deg, #dc2626, #f59e0b);
+        }
+
+        .card-header {
+            padding: 28px 36px 20px;
+            border-bottom: 1px solid var(--sf-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.8px;
+            padding: 4px 12px;
+            border-radius: var(--sf-radius-pill);
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .brand-badge.blue {
+            background-color: var(--sf-active-bg);
+            color: var(--sf-brand-blue);
+        }
+
+        .card-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--sf-text-primary);
+        }
+
+        .card-header p {
+            font-size: 0.88rem;
+            color: var(--sf-text-muted);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--sf-radius-pill);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.granted {
+            background-color: var(--sf-success-green-bg);
+            border: 1px solid var(--sf-success-green-border);
+            color: #065f46;
+        }
+
+        .status-badge.denied {
+            background-color: var(--sf-accent-red-bg);
+            border: 1px solid var(--sf-accent-red-border);
+            color: #991b1b;
+        }
+
+        .status-badge.loading {
+            background-color: var(--sf-pill-bg);
+            color: var(--sf-text-muted);
+        }
+
+        .card-body {
+            padding: 30px 36px;
+        }
+
+        /* -------------------------------------------------------------
+           ESTADO: CARREGANDO
+           ------------------------------------------------------------- */
+        .loading-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .loading-spinner {
+            font-size: 2.2rem;
+            color: var(--sf-accent-blue);
+            margin-bottom: 16px;
+        }
+
+        /* -------------------------------------------------------------
+           ESTADO: ACESSO NEGADO (HTTP 401 / 403)
+           ------------------------------------------------------------- */
+        .denied-state {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .denied-banner {
+            background-color: var(--sf-accent-red-bg);
+            border: 1px solid var(--sf-accent-red-border);
+            border-radius: var(--sf-radius-md);
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .denied-icon {
+            font-size: 2.4rem;
+            color: var(--sf-accent-red);
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .denied-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #991b1b;
+            margin-bottom: 6px;
+        }
+
+        .denied-content p {
+            font-size: 0.92rem;
+            color: #7f1d1d;
+            line-height: 1.5;
+        }
+
+        /* Caixa de explicação didática */
+        .pedagogical-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--sf-border-color);
+            border-radius: var(--sf-radius-md);
+            padding: 20px 22px;
+            margin-bottom: 24px;
+        }
+
+        .pedagogical-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--sf-text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pedagogical-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--sf-text-dark);
+            line-height: 1.45;
+        }
+
+        .pedagogical-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .pedagogical-list li i {
+            color: var(--sf-accent-blue);
+            margin-top: 3px;
+        }
+
+        .code-inspector {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            padding: 12px 16px;
+            border-radius: var(--sf-radius-sm);
+            overflow-x: auto;
+            margin-top: 12px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            border: 1px solid #334155;
+        }
+
+        /* -------------------------------------------------------------
+           ESTADO: ACESSO AUTORIZADO (HTTP 200)
+           ------------------------------------------------------------- */
+        .granted-state {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .granted-banner {
+            background-color: var(--sf-success-green-bg);
+            border: 1px solid var(--sf-success-green-border);
+            border-radius: var(--sf-radius-md);
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .granted-icon {
+            font-size: 2.2rem;
+            color: var(--sf-success-green);
+        }
+
+        .granted-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 4px;
+        }
+
+        .granted-content p {
+            font-size: 0.88rem;
+            color: #047857;
+        }
+
+        /* Grid de Dados Protegidos */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .data-card {
+            background-color: #f8fafc;
+            border: 1px solid var(--sf-border-color);
+            border-radius: var(--sf-radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .data-card-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--sf-text-muted);
+        }
+
+        .data-card-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--sf-text-primary);
+        }
+
+        .data-card-sub {
+            font-size: 0.78rem;
+            color: var(--sf-text-muted);
+        }
+
+        /* Tabela de Relatórios Sigilosos */
+        .reports-table-container {
+            border: 1px solid var(--sf-border-color);
+            border-radius: var(--sf-radius-md);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .reports-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+            text-align: left;
+        }
+
+        .reports-table th {
+            background-color: #f8fafc;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--sf-text-muted);
+            border-bottom: 1px solid var(--sf-border-color);
+        }
+
+        .reports-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--sf-text-dark);
+        }
+
+        .reports-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: var(--sf-radius-pill);
+            text-transform: uppercase;
+        }
+
+        .tag-pill.green {
+            background-color: var(--sf-success-green-bg);
+            color: #047857;
+        }
+
+        .tag-pill.blue {
+            background-color: var(--sf-active-bg);
+            color: var(--sf-brand-blue);
+        }
+
+        /* Ações e Botões Didáticos */
+        .action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px 18px;
+            border-radius: var(--sf-radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: var(--transition-fast);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--sf-brand-blue);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--sf-brand-blue-hover);
+        }
+
+        .btn-outline-danger {
+            background-color: #fef2f2;
+            border-color: var(--sf-accent-red-border);
+            color: var(--sf-accent-red);
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #fee2e2;
+        }
+
+        .btn-outline {
+            background-color: #f8fafc;
+            border-color: var(--sf-border-color);
+            color: var(--sf-text-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Rodapé Didático */
+        .card-footer {
+            background-color: #f8fafc;
+            border-top: 1px solid var(--sf-border-color);
+            padding: 16px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--sf-text-muted);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-footer a {
+            color: var(--sf-accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .card-header, .card-body, .card-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-container">
+        <div id="statusTopBar" class="status-top-bar"></div>
+
+        <header class="card-header">
+            <div class="header-brand">
+                <div class="brand-badge blue">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>ESCOLA DO FUTURO • EE ANTONIO REGINATO</span>
+                </div>
+                <h1>Área Restrita do Sistema</h1>
+                <p>Módulo Pedagógico de Demonstração de Autorização JWT (FastAPI)</p>
+            </div>
+            <div>
+                <span id="statusBadge" class="status-badge loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Validando Credenciais...
+                </span>
+            </div>
+        </header>
+
+        <section class="card-body">
+
+            <!-- 1. ESTADO: CARREGANDO / VERIFICANDO -->
+            <div id="loadingState" class="loading-state">
+                <i class="fa-solid fa-shield-halved loading-spinner fa-spin"></i>
+                <h3 style="font-family: 'Outfit'; font-size: 1.15rem; margin-bottom: 6px;">Consultando Servidor FastAPI...</h3>
+                <p style="font-size: 0.88rem; color: var(--sf-text-muted);">
+                    Verificando presença e autenticidade do Bearer Token nos registros de sessão.
+                </p>
+            </div>
+
+            <!-- 2. ESTADO: ACESSO NEGADO (HTTP 401 / 403) -->
+            <div id="deniedState" class="denied-state">
+                <div class="denied-banner">
+                    <i class="fa-solid fa-ban denied-icon"></i>
+                    <div class="denied-content">
+                        <h2>⛔ Acesso Negado (HTTP 401 Não Autorizado)</h2>
+                        <p id="deniedMessage">
+                            Você tentou acessar diretamente esta página restrita sem fornecer um Token JWT válido no cabeçalho <code>Authorization: Bearer</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pedagogical-box">
+                    <div class="pedagogical-title">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        Explicação Pedagógica: Por que o acesso foi bloqueado?
+                    </div>
+                    <ul class="pedagogical-list">
+                        <li>
+                            <i class="fa-solid fa-lock"></i>
+                            <div>
+                                <strong>Rota Protegida por Token:</strong> Os dados confidenciais desta página são protegidos pelo endpoint FastAPI <code>GET /api/dados-restritos</code> com a dependência <code>Depends(get_current_user)</code>.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                <strong>Tentativa de Acesso Direto:</strong> Ao digitar o link diretamente no navegador ou sem efetuar login prévio, o navegador não possui o token de sessão ou o cabeçalho <code>Authorization</code> não foi injetado.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-shield-cat"></i>
+                            <div>
+                                <strong>Segurança contra Invasão:</strong> O backend FastAPI interceptou a requisição e devolveu o código HTTP <code>401 Unauthorized</code> impedindo o vazamento de informações.
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div style="margin-top: 16px;">
+                        <span style="font-size: 0.78rem; font-weight: 700; color: var(--sf-text-muted); text-transform: uppercase;">
+                            <i class="fa-solid fa-terminal"></i> Resposta Bruta do Servidor FastAPI:
+                        </span>
+                        <pre id="rawErrorOutput" class="code-inspector">// Aguardando requisição...</pre>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <a href="/" class="btn-action btn-primary">
+                        <i class="fa-solid fa-right-to-bracket"></i> Ir para a Página de Login
+                    </a>
+                    <button type="button" id="retryFetchBtn" class="btn-action btn-outline">
+                        <i class="fa-solid fa-rotate-right"></i> Tentar Forçar Acesso Novamente
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. ESTADO: ACESSO AUTORIZADO (HTTP 200) -->
+            <div id="grantedState" class="granted-state">
+                <div class="granted-banner">
+                    <i class="fa-solid fa-circle-check granted-icon"></i>
+                    <div class="granted-content">
+                        <h2>✅ Acesso Autorizado com Sucesso (HTTP 200 OK)</h2>
+                        <p id="grantedWelcomeText">
+                            Bem-vindo(a), autenticação confirmada pelo servidor FastAPI via assinatura digital do JWT.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Painel de Dados Confidenciais -->
+                <div class="data-grid">
+                    <div class="data-card">
+                        <span class="data-card-label">Usuário Autenticado</span>
+                        <span class="data-card-value" id="dispUserName" style="font-size: 1.15rem;">Admin</span>
+                        <span class="data-card-sub" id="dispUserEmail">admin@escola.sp.gov.br</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-card-label">Perfil de Acesso</span>
+                        <span class="data-card-value" id="dispUserRole" style="color: var(--sf-brand-blue); text-transform: capitalize;">Gestor</span>
+                        <span class="data-card-sub">Permissão Total do Sistema</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-card-label">Média Geral EE Reginato</span>
+                        <span class="data-card-value" style="color: var(--sf-success-green);">8.4</span>
+                        <span class="data-card-sub">Meta SARESP Superada</span>
+                    </div>
+                    <div class="data-card">
+                        <span class="data-card-label">Turmas Ativas</span>
+                        <span class="data-card-value">14 Salas</span>
+                        <span class="data-card-sub">Ensino Fundamental e Médio</span>
+                    </div>
+                </div>
+
+                <!-- Tabela de Documentos Restritos Liberados -->
+                <div class="pedagogical-title">
+                    <i class="fa-solid fa-folder-closed"></i> Documentos Restritos Desbloqueados para este Perfil:
+                </div>
+
+                <div class="reports-table-container">
+                    <table class="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Documento Sigiloso</th>
+                                <th>Classificação</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr>
+                                <td>#REL-01</td>
+                                <td>Desempenho SARESP e Avaliações Diagnósticas 2026</td>
+                                <td><span class="tag-pill blue">Restrito à Gestão</span></td>
+                                <td><span class="tag-pill green">Disponível</span></td>
+                            </tr>
+                            <tr>
+                                <td>#REL-02</td>
+                                <td>Diário de Classe & Lançamento de Médias Bimestrais</td>
+                                <td><span class="tag-pill blue">Professores / Gestão</span></td>
+                                <td><span class="tag-pill green">Disponível</span></td>
+                            </tr>
+                            <tr>
+                                <td>#REL-03</td>
+                                <td>Auditoria de Matrículas e Frequência Escolar</td>
+                                <td><span class="tag-pill blue">Exclusivo Diretoria</span></td>
+                                <td><span class="tag-pill green">Disponível</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Caixa Didática de Como Funcionou -->
+                <div class="pedagogical-box">
+                    <div class="pedagogical-title">
+                        <i class="fa-solid fa-code"></i>
+                        Como a Permissão Foi Validada Tecnologicamente?
+                    </div>
+                    <ul class="pedagogical-list">
+                        <li>
+                            <i class="fa-solid fa-key"></i>
+                            <div>
+                                O frontend enviou o cabeçalho HTTP: <br>
+                                <code id="headerDebugText" style="color: #0284c7; font-weight: bold;">Authorization: Bearer eyJhbGci...</code>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-microchip"></i>
+                            <div>
+                                O FastAPI executou <code>decode_access_token()</code> conferindo a assinatura HMAC-SHA256 e o prazo de expiração.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Ações do Painel -->
+                <div class="action-row">
+                    <button type="button" id="simulateRevokeBtn" class="btn-action btn-outline-danger">
+                        <i class="fa-solid fa-user-slash"></i> Simular Negação (Apagar Token e Recarregar)
+                    </button>
+                    <a href="/" class="btn-action btn-outline">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar ao Portal Inicial
+                    </a>
+                    <button type="button" id="logoutFromPainelBtn" class="btn-action btn-primary">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Encerrar Sessão
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="card-footer">
+            <span>Escola Estadual Antonio Reginato • Módulo de Segurança da Informação</span>
+            <span>API Docs: <a href="/docs" target="_blank">/docs (Swagger)</a></span>
+        </footer>
+    </main>
+
+    <script>
+        (function () {
+            const API_BASE = window.location.origin.startsWith('http') 
+                ? window.location.origin 
+                : 'http://127.0.0.1:8000';
+
+            const statusTopBar = document.getElementById('statusTopBar');
+            const statusBadge = document.getElementById('statusBadge');
+            const loadingState = document.getElementById('loadingState');
+            const deniedState = document.getElementById('deniedState');
+            const grantedState = document.getElementById('grantedState');
+
+            const rawErrorOutput = document.getElementById('rawErrorOutput');
+            const deniedMessage = document.getElementById('deniedMessage');
+            const grantedWelcomeText = document.getElementById('grantedWelcomeText');
+            const dispUserName = document.getElementById('dispUserName');
+            const dispUserEmail = document.getElementById('dispUserEmail');
+            const dispUserRole = document.getElementById('dispUserRole');
+            const headerDebugText = document.getElementById('headerDebugText');
+
+            const retryFetchBtn = document.getElementById('retryFetchBtn');
+            const simulateRevokeBtn = document.getElementById('simulateRevokeBtn');
+            const logoutFromPainelBtn = document.getElementById('logoutFromPainelBtn');
+
+            function getStoredToken() {
+                try {
+                    return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function clearStoredToken() {
+                try {
+                    localStorage.removeItem('access_token');
+                    sessionStorage.removeItem('access_token');
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
+
+            // Exibe a tela de ACESSO NEGADO
+            function showDeniedView(errorData, statusCode) {
+                loadingState.style.display = 'none';
+                grantedState.style.display = 'none';
+                deniedState.style.display = 'block';
+
+                statusTopBar.className = 'status-top-bar denied';
+                statusBadge.className = 'status-badge denied';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> HTTP ' + (statusCode || 401) + ' Não Autorizado';
+
+                const debugJson = {
+                    endpoint_chamado: API_BASE + '/api/dados-restritos',
+                    status_http: statusCode || 401,
+                    erro_recebido: errorData,
+                    token_encontrado_no_navegador: getStoredToken() ? 'Sim (Token inválido/expirado)' : 'Nenhum token encontrado (Acesso direto sem login)'
+                };
+
+                rawErrorOutput.textContent = JSON.stringify(debugJson, null, 2);
+            }
+
+            // Exibe a tela de ACESSO AUTORIZADO
+            function showGrantedView(data, token) {
+                loadingState.style.display = 'none';
+                deniedState.style.display = 'none';
+                grantedState.style.display = 'block';
+
+                statusTopBar.className = 'status-top-bar granted';
+                statusBadge.className = 'status-badge granted';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> HTTP 200 Autorizado';
+
+                if (data && data.usuario) {
+                    dispUserName.textContent = data.usuario.nome || data.usuario.name || 'Usuário';
+                    dispUserEmail.textContent = data.usuario.email || '';
+                    dispUserRole.textContent = data.usuario.role || 'Membro';
+                    grantedWelcomeText.textContent = `Olá, ${data.usuario.nome || 'Membro'}! Sua permissão foi validada com sucesso pelo backend FastAPI.`;
+                }
+
+                if (token) {
+                    const tokenPreview = token.length > 25 ? token.substring(0, 25) + '...' + token.substring(token.length - 10) : token;
+                    headerDebugText.textContent = 'Authorization: Bearer ' + tokenPreview;
+                }
+            }
+
+            // Validação de Acesso contra o Backend FastAPI
+            async function verifyAccess() {
+                loadingState.style.display = 'block';
+                deniedState.style.display = 'none';
+                grantedState.style.display = 'none';
+                statusBadge.className = 'status-badge loading';
+                statusBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Token...';
+
+                const token = getStoredToken();
+
+                // Caso não tenha token no navegador: acesso direto não autorizado
+                if (!token) {
+                    // Simula a requisição sem token para pegar o 401 real do backend
+                    try {
+                        const directResp = await fetch(`${API_BASE}/api/dados-restritos`);
+                        const errJson = await directResp.json().catch(() => ({ detail: 'Token não fornecido' }));
+                        showDeniedView(errJson, directResp.status);
+                    } catch (e) {
+                        showDeniedView({ detail: 'Falha de conexão com o backend ou token ausente.' }, 401);
+                    }
+                    return;
+                }
+
+                // Caso tenha token: envia o cabeçalho Authorization: Bearer
+                try {
+                    const response = await fetch(`${API_BASE}/api/dados-restritos`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json().catch(() => ({}));
+
+                    if (response.ok) {
+                        showGrantedView(data, token);
+                    } else {
+                        // Token expirado ou forjado
+                        showDeniedView(data, response.status);
+                    }
+                } catch (err) {
+                    showDeniedView({ detail: 'Erro ao conectar à API FastAPI: ' + (err.message || String(err)) }, 500);
+                }
+            }
+
+            // Botão: Tentar forçar acesso novamente
+            retryFetchBtn.addEventListener('click', () => {
+                verifyAccess();
+            });
+
+            // Botão: Simular Negação (Apaga o token e re-executa a validação)
+            simulateRevokeBtn.addEventListener('click', () => {
+                clearStoredToken();
+                verifyAccess();
+            });
+
+            // Botão: Encerrar Sessão
+            logoutFromPainelBtn.addEventListener('click', () => {
+                clearStoredToken();
+                window.location.href = '/';
+            });
+
+            // Executa verificação inicial ao abrir a página
+            verifyAccess();
+        })();
+    </script>
+</body>
+</html>
