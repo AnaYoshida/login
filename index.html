@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Autenticação de Usuário - Escola do Futuro - EE Antonio Reginato - FastAPI Backend">
-    <title>Escola do Futuro — Autenticação de Usuário</title>
+    <meta name="description" content="Portal de Autenticação - Escola do Futuro - EE Antonio Reginato">
+    <title>Escola do Futuro — Autenticação & Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -12,10 +12,10 @@
     <style>
         /* ==========================================================================
            Design System Oficial - ESCOLA DO FUTURO
-           Projeto: Autenticação FastAPI - EE Antonio Reginato
+           EE Antonio Reginato - Sistema de Gestão e Autenticação Integrado
            ========================================================================== */
         :root {
-            --sf-bg-canvas: #f4f6f9;
+            --sf-bg-canvas: #f1f5f9;
             --sf-bg-card: #ffffff;
             --sf-text-primary: #0b2545;
             --sf-text-dark: #1e293b;
@@ -24,24 +24,26 @@
             --sf-brand-blue: #0f4c81;
             --sf-brand-blue-hover: #0a3760;
             --sf-accent-blue: #0284c7;
+            --sf-accent-blue-hover: #0369a1;
             --sf-active-bg: #e0ecfb;
             --sf-pill-bg: #eef2f6;
-            --sf-accent-red: #cd2b33;
+            --sf-accent-red: #dc2626;
             --sf-accent-red-bg: #fef2f2;
             --sf-accent-red-border: #fecaca;
             --sf-success-green: #10b981;
             --sf-success-green-bg: #ecfdf5;
             --sf-success-green-border: #a7f3d0;
             --sf-warning-yellow: #f59e0b;
+            --sf-warning-bg: #fffbeb;
             --sf-border-color: #e2e8f0;
             --sf-border-focus: #0284c7;
             --sf-radius-sm: 6px;
             --sf-radius-md: 10px;
-            --sf-radius-lg: 14px;
+            --sf-radius-lg: 16px;
             --sf-radius-pill: 50px;
             --sf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --sf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --sf-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --sf-shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
+            --sf-shadow-lg: 0 12px 30px rgba(15, 23, 42, 0.10);
             --transition-fast: 0.2s ease;
         }
 
@@ -60,7 +62,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px 16px;
         }
 
         .auth-container {
@@ -80,7 +82,7 @@
         }
 
         .card-header {
-            padding: 28px 32px 20px;
+            padding: 28px 32px 18px;
             text-align: center;
             border-bottom: 1px solid #f1f5f9;
         }
@@ -93,11 +95,11 @@
             color: var(--sf-brand-blue);
             font-family: 'Outfit', sans-serif;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             letter-spacing: 0.8px;
             padding: 6px 14px;
             border-radius: var(--sf-radius-pill);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-transform: uppercase;
         }
 
@@ -110,54 +112,87 @@
         }
 
         .card-header p {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--sf-text-muted);
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .card-body {
             padding: 24px 32px 28px;
         }
 
-        .mode-selector {
+        /* Abas de Navegação (Entrar / Criar Conta) */
+        .auth-tabs {
             display: flex;
-            gap: 6px;
             background-color: var(--sf-pill-bg);
             padding: 4px;
             border-radius: var(--sf-radius-md);
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            gap: 4px;
         }
 
-        .mode-btn {
+        .auth-tab-btn {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 8px 10px;
+            padding: 10px 14px;
             border-radius: var(--sf-radius-sm);
             font-family: 'Inter', sans-serif;
-            font-size: 0.78rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--sf-text-muted);
             cursor: pointer;
             transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .mode-btn.active {
+        .auth-tab-btn.active {
             background-color: var(--sf-bg-card);
             color: var(--sf-brand-blue);
             box-shadow: var(--sf-shadow-sm);
         }
 
+        .auth-tab-btn:hover:not(.active) {
+            color: var(--sf-brand-blue);
+        }
+
+        /* Formulários */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
         }
 
         .form-label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: var(--sf-text-dark);
-            margin-bottom: 7px;
+            margin-bottom: 6px;
         }
 
         .input-wrapper {
@@ -175,11 +210,11 @@
             transition: var(--transition-fast);
         }
 
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 11px 42px 11px 40px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             color: var(--sf-text-dark);
             background-color: #f8fafc;
             border: 1px solid var(--sf-border-color);
@@ -188,13 +223,22 @@
             transition: var(--transition-fast);
         }
 
-        .form-input:focus {
-            background-color: #ffffff;
-            border-color: var(--sf-border-focus);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+        .form-select {
+            padding-right: 20px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 14px;
         }
 
-        .form-input:focus + .input-icon,
+        .form-input:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: var(--sf-border-focus);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+        }
+
         .input-wrapper:focus-within .input-icon {
             color: var(--sf-accent-blue);
         }
@@ -219,6 +263,40 @@
             background-color: var(--sf-pill-bg);
         }
 
+        .form-aux {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0 18px;
+            font-size: 0.8rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--sf-text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me input {
+            cursor: pointer;
+            accent-color: var(--sf-brand-blue);
+        }
+
+        .forgot-link {
+            color: var(--sf-accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+
+        .forgot-link:hover {
+            color: var(--sf-brand-blue);
+            text-decoration: underline;
+        }
+
         .submit-btn {
             width: 100%;
             padding: 12px 18px;
@@ -235,7 +313,6 @@
             justify-content: center;
             gap: 10px;
             transition: var(--transition-fast);
-            margin-top: 6px;
         }
 
         .submit-btn:hover:not(:disabled) {
@@ -247,16 +324,17 @@
         .submit-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
+            transform: none;
         }
 
-        /* Feedback Alert Box */
+        /* Alerta de Feedback */
         .feedback-alert {
             display: none;
             align-items: flex-start;
             gap: 12px;
-            padding: 13px 16px;
+            padding: 12px 16px;
             border-radius: var(--sf-radius-md);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             line-height: 1.45;
             margin-top: 18px;
             border: 1px solid transparent;
@@ -264,6 +342,7 @@
 
         .feedback-alert.show {
             display: flex;
+            animation: fadeIn 0.2s ease;
         }
 
         .feedback-alert.success {
@@ -275,7 +354,7 @@
         .feedback-alert.success i {
             color: var(--sf-success-green);
             font-size: 1.1rem;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         .feedback-alert.error {
@@ -287,101 +366,159 @@
         .feedback-alert.error i {
             color: var(--sf-accent-red);
             font-size: 1.1rem;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
-        /* Pedagogical API Inspector */
-        .debug-panel {
-            margin-top: 22px;
-            border-top: 1px solid var(--sf-border-color);
-            padding-top: 16px;
+        .feedback-alert.info {
+            background-color: var(--sf-active-bg);
+            border-color: #bfdbfe;
+            color: #1e40af;
         }
 
-        .debug-header {
+        /* Tela de Usuário Autenticado (Dashboard Card) */
+        .dashboard-view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dashboard-view.active {
+            display: block;
+        }
+
+        .user-profile-card {
+            text-align: center;
+            padding: 8px 0 16px;
+        }
+
+        .avatar-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sf-brand-blue), var(--sf-accent-blue));
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
+            justify-content: center;
+            margin: 0 auto 14px;
+            box-shadow: var(--sf-shadow-md);
         }
 
-        .debug-title {
-            font-size: 0.78rem;
+        .user-profile-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--sf-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .user-profile-email {
+            font-size: 0.85rem;
             color: var(--sf-text-muted);
-            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .role-badge {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .status-pill {
-            font-size: 0.72rem;
-            font-weight: 600;
-            padding: 2px 8px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 12px;
             border-radius: var(--sf-radius-pill);
-            background-color: var(--sf-pill-bg);
-            color: var(--sf-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: var(--sf-active-bg);
+            color: var(--sf-brand-blue);
         }
 
-        .status-pill.ok {
-            background-color: var(--sf-success-green-bg);
-            color: #047857;
+        .user-details-grid {
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: left;
         }
 
-        .status-pill.err {
-            background-color: var(--sf-accent-red-bg);
-            color: var(--sf-accent-red);
-        }
-
-        .debug-box {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.78rem;
-            padding: 12px 14px;
-            border-radius: var(--sf-radius-sm);
-            overflow-x: auto;
-            max-height: 170px;
-            white-space: pre-wrap;
-            word-break: break-all;
-            line-height: 1.45;
-        }
-
-        .session-bar {
-            display: none;
-            margin-top: 12px;
-            align-items: center;
-            justify-content: space-between;
+        .detail-item {
             background-color: #f8fafc;
             border: 1px solid var(--sf-border-color);
-            padding: 8px 12px;
-            border-radius: var(--sf-radius-sm);
-            font-size: 0.78rem;
-            color: var(--sf-text-muted);
+            border-radius: var(--sf-radius-md);
+            padding: 10px 14px;
         }
 
-        .session-bar.active {
-            display: flex;
-        }
-
-        .clear-token-btn {
-            background: none;
-            border: 1px solid var(--sf-border-color);
-            color: var(--sf-accent-red);
-            font-size: 0.75rem;
+        .detail-item-label {
+            font-size: 0.72rem;
             font-weight: 600;
-            padding: 4px 8px;
-            border-radius: var(--sf-radius-sm);
+            color: var(--sf-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .detail-item-value {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--sf-text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-outline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px 16px;
+            background-color: transparent;
+            border: 1px solid var(--sf-border-color);
+            border-radius: var(--sf-radius-md);
+            color: var(--sf-text-dark);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: var(--sf-text-muted);
+        }
+
+        .btn-danger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px 16px;
+            background-color: #fee2e2;
+            border: 1px solid var(--sf-accent-red-border);
+            border-radius: var(--sf-radius-md);
+            color: var(--sf-accent-red);
+            font-size: 0.88rem;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition-fast);
         }
 
-        .clear-token-btn:hover {
-            background-color: var(--sf-accent-red-bg);
-            border-color: var(--sf-accent-red-border);
+        .btn-danger:hover {
+            background-color: #fecaca;
         }
 
+        /* Rodapé */
         .card-footer {
             background-color: #f8fafc;
             border-top: 1px solid var(--sf-border-color);
@@ -391,7 +528,7 @@
             color: var(--sf-text-muted);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
         }
 
         .card-footer a {
@@ -404,10 +541,31 @@
             text-decoration: underline;
         }
 
+        .server-status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #94a3b8;
+            margin-right: 5px;
+            transition: var(--transition-fast);
+        }
+
+        .server-status-dot.online {
+            background-color: var(--sf-success-green);
+        }
+
+        .server-status-dot.offline {
+            background-color: var(--sf-accent-red);
+        }
+
         @media (max-width: 480px) {
             .card-header, .card-body {
                 padding-left: 20px;
                 padding-right: 20px;
+            }
+            .user-details-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -422,331 +580,660 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>ESCOLA DO FUTURO</span>
             </div>
-            <h1>Autenticação de Usuário</h1>
-            <p>Informe suas credenciais para acessar o sistema integrado</p>
+            <h1 id="headerTitle">Portal de Acesso</h1>
+            <p id="headerSubtitle">Sistema Integrado de Gestão Escolar • EE Antonio Reginato</p>
         </header>
 
         <section class="card-body">
-            <!-- Seletor de Modo de Payload Pedagógico -->
-            <div class="mode-selector" role="tablist" aria-label="Modo de envio do payload">
-                <button type="button" class="mode-btn active" id="modeAutoBtn" data-mode="auto">
-                    Auto (JSON + OAuth2)
-                </button>
-                <button type="button" class="mode-btn" id="modeJsonBtn" data-mode="json">
-                    JSON (email/senha)
-                </button>
-                <button type="button" class="mode-btn" id="modeFormBtn" data-mode="form">
-                    OAuth2 Form
-                </button>
+            <!-- Abas de Autenticação (quando deslogado) -->
+            <div id="authNavWrapper">
+                <div class="auth-tabs" role="tablist" aria-label="Ações de Autenticação">
+                    <button type="button" class="auth-tab-btn active" id="tabLoginBtn" role="tab" aria-selected="true">
+                        <i class="fa-solid fa-right-to-bracket"></i> Entrar
+                    </button>
+                    <button type="button" class="auth-tab-btn" id="tabRegisterBtn" role="tab" aria-selected="false">
+                        <i class="fa-solid fa-user-plus"></i> Criar Conta
+                    </button>
+                </div>
+
+                <!-- Formulário de Login -->
+                <div id="loginTabContent" class="tab-content active" role="tabpanel">
+                    <form id="loginForm" novalidate>
+                        <div class="form-group">
+                            <label for="loginEmail" class="form-label">E-mail ou Usuário</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="text"
+                                    id="loginEmail"
+                                    name="username"
+                                    class="form-input"
+                                    placeholder="seu.email@escola.sp.gov.br"
+                                    autocomplete="username"
+                                    required
+                                >
+                                <i class="fa-solid fa-envelope input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword" class="form-label">Senha</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="password"
+                                    id="loginPassword"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="Digite sua senha"
+                                    autocomplete="current-password"
+                                    required
+                                >
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <button
+                                    type="button"
+                                    class="toggle-password"
+                                    data-target="loginPassword"
+                                    title="Mostrar ou ocultar senha"
+                                    aria-label="Alternar visibilidade da senha"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-aux">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberMe">
+                                <span>Lembrar de mim</span>
+                            </label>
+                            <a href="#" id="forgotPasswordLink" class="forgot-link">Esqueceu a senha?</a>
+                        </div>
+
+                        <button type="submit" id="loginSubmitBtn" class="submit-btn">
+                            <i class="fa-solid fa-right-to-bracket" id="loginSubmitIcon"></i>
+                            <span id="loginSubmitText">Entrar no Sistema</span>
+                        </button>
+
+                        <!-- Demonstração Pedagógica: Tentativa de Acesso Direto sem Login -->
+                        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--sf-border-color); text-align: center;">
+                            <a href="/painel" target="_blank" style="color: var(--sf-accent-red); font-size: 0.8rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Testar Acesso Direto sem Login (Demonstrar Bloqueio 401)
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Formulário de Cadastro -->
+                <div id="registerTabContent" class="tab-content" role="tabpanel">
+                    <form id="registerForm" novalidate>
+                        <div class="form-group">
+                            <label for="regName" class="form-label">Nome Completo</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="text"
+                                    id="regName"
+                                    name="name"
+                                    class="form-input"
+                                    placeholder="Prof. João Silva"
+                                    autocomplete="name"
+                                    required
+                                >
+                                <i class="fa-solid fa-user input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regEmail" class="form-label">E-mail Institucional</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="email"
+                                        id="regEmail"
+                                        name="email"
+                                        class="form-input"
+                                        placeholder="usuario@escola.sp.gov.br"
+                                        autocomplete="email"
+                                        required
+                                    >
+                                    <i class="fa-solid fa-envelope input-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regRole" class="form-label">Perfil de Acesso</label>
+                                <div class="input-wrapper">
+                                    <select id="regRole" name="role" class="form-select">
+                                        <option value="professor">Professor</option>
+                                        <option value="aluno">Aluno</option>
+                                        <option value="gestor">Gestor / Coordenação</option>
+                                    </select>
+                                    <i class="fa-solid fa-id-badge input-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regPassword" class="form-label">Senha de Acesso</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="password"
+                                    id="regPassword"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="Mínimo de 6 caracteres"
+                                    autocomplete="new-password"
+                                    minlength="6"
+                                    required
+                                >
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <button
+                                    type="button"
+                                    class="toggle-password"
+                                    data-target="regPassword"
+                                    title="Mostrar ou ocultar senha"
+                                    aria-label="Alternar visibilidade da senha"
+                                >
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regConfirmPassword" class="form-label">Confirmar Senha</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="password"
+                                    id="regConfirmPassword"
+                                    name="confirmPassword"
+                                    class="form-input"
+                                    placeholder="Repita sua senha"
+                                    autocomplete="new-password"
+                                    required
+                                >
+                                <i class="fa-solid fa-shield-halved input-icon"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="registerSubmitBtn" class="submit-btn">
+                            <i class="fa-solid fa-user-plus" id="regSubmitIcon"></i>
+                            <span id="regSubmitText">Criar Minha Conta</span>
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <form id="loginForm" novalidate>
-                <div class="form-group">
-                    <label for="emailInput" class="form-label">E-mail / Usuário</label>
-                    <div class="input-wrapper">
-                        <input
-                            type="text"
-                            id="emailInput"
-                            name="email"
-                            class="form-input"
-                            placeholder="seu.email@escola.sp.gov.br"
-                            autocomplete="username"
-                            required
-                        >
-                        <i class="fa-solid fa-envelope input-icon"></i>
+            <!-- Visualização de Usuário Autenticado (Dashboard Card) -->
+            <div id="dashboardView" class="dashboard-view" role="region" aria-label="Painel do Usuário">
+                <div class="user-profile-card">
+                    <div class="avatar-circle" id="userAvatar">EF</div>
+                    <h2 class="user-profile-name" id="userNameDisplay">Usuário Autenticado</h2>
+                    <p class="user-profile-email" id="userEmailDisplay">usuario@escola.sp.gov.br</p>
+                    <span class="role-badge" id="userRoleBadge">
+                        <i class="fa-solid fa-circle-check"></i> <span id="userRoleText">Professor</span>
+                    </span>
+                </div>
+
+                <div class="user-details-grid">
+                    <div class="detail-item">
+                        <div class="detail-item-label">Status da Conta</div>
+                        <div class="detail-item-value" id="userStatusDisplay" style="color: var(--sf-success-green);">
+                            <i class="fa-solid fa-circle" style="font-size: 0.65rem;"></i> Ativo
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">ID do Usuário</div>
+                        <div class="detail-item-value" id="userIdDisplay">#1</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <div class="detail-item-label">Sessão Autenticada</div>
+                        <div class="detail-item-value" id="userTokenDisplay" style="font-family: monospace; font-size: 0.8rem;">
+                            Token JWT Válido
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="senhaInput" class="form-label">Senha</label>
-                    <div class="input-wrapper">
-                        <input
-                            type="password"
-                            id="senhaInput"
-                            name="senha"
-                            class="form-input"
-                            placeholder="Digite sua senha"
-                            autocomplete="current-password"
-                            required
-                        >
-                        <i class="fa-solid fa-lock input-icon"></i>
-                        <button
-                            type="button"
-                            id="togglePasswordBtn"
-                            class="toggle-password"
-                            title="Mostrar ou ocultar senha"
-                            aria-label="Alternar visibilidade da senha"
-                        >
-                            <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
-                        </button>
-                    </div>
+                <div class="dashboard-actions">
+                    <a href="/painel" class="btn-action" style="background-color: var(--sf-brand-blue); color: #ffffff; padding: 12px 16px; border-radius: var(--sf-radius-md); font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--sf-shadow-sm); transition: var(--transition-fast);">
+                        <i class="fa-solid fa-shield-halved"></i> Acessar Área Restrita (Com Permissão Autorizada)
+                    </a>
+                    <a href="/docs" target="_blank" class="btn-outline">
+                        <i class="fa-solid fa-book-open"></i> Acessar Documentação da API (Swagger)
+                    </a>
+                    <button type="button" id="refreshMeBtn" class="btn-outline">
+                        <i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados do Perfil (/auth/me)
+                    </button>
+                    <button type="button" id="logoutBtn" class="btn-danger">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Encerrar Sessão (Logout)
+                    </button>
                 </div>
+            </div>
 
-                <button type="submit" id="submitBtn" class="submit-btn">
-                    <i class="fa-solid fa-right-to-bracket" id="submitIcon"></i>
-                    <span id="submitText">Entrar no Sistema</span>
-                </button>
-            </form>
-
-            <!-- Alerta Visual de Sucesso ou Erro -->
+            <!-- Caixa de Feedback e Mensagens -->
             <div id="feedbackAlert" class="feedback-alert" role="alert" aria-live="polite">
                 <i id="feedbackIcon" class="fa-solid fa-circle-info"></i>
                 <div id="feedbackMessage"></div>
             </div>
-
-            <!-- Área Pedagógica de Inspeção da Resposta FastAPI -->
-            <div class="debug-panel">
-                <div class="debug-header">
-                    <span class="debug-title">
-                        <i class="fa-solid fa-terminal"></i>
-                        Retorno da API (FastAPI)
-                    </span>
-                    <span id="httpStatusPill" class="status-pill">Aguardando envio</span>
-                </div>
-                <pre id="debugOutput" class="debug-box">// Endpoint: POST https://geduc.inetz.com.br/auth/login
-// Preencha o formulário e clique em "Entrar no Sistema" para inspecionar a resposta JSON e os tokens.</pre>
-
-                <div id="sessionBar" class="session-bar">
-                    <span id="sessionStatusText">
-                        <i class="fa-solid fa-key"></i> Token salvo no localStorage
-                    </span>
-                    <button type="button" id="clearTokenBtn" class="clear-token-btn">
-                        Limpar Sessão
-                    </button>
-                </div>
-            </div>
         </section>
 
         <footer class="card-footer">
-            <span>Escola Estadual Antonio Reginato • Sistema Integrado • FastAPI Backend</span>
-            <span>Documentação Swagger: <a href="https://geduc.inetz.com.br/docs" target="_blank" rel="noopener noreferrer">geduc.inetz.com.br/docs</a></span>
+            <div>
+                <span id="serverStatusDot" class="server-status-dot"></span>
+                <span id="serverStatusText">Conectando ao backend FastAPI...</span>
+            </div>
+            <span>Escola Estadual Antonio Reginato • Backend FastAPI</span>
         </footer>
     </main>
 
     <script>
         (function () {
-            const API_URL = 'https://geduc.inetz.com.br/auth/login';
+            // Configuração dinâmica do endpoint base (mesma origem ou localhost padrão)
+            const API_BASE = window.location.origin.startsWith('http') 
+                ? window.location.origin 
+                : 'http://127.0.0.1:8000';
 
+            // Elementos DOM de navegação e cabeçalho
+            const headerTitle = document.getElementById('headerTitle');
+            const headerSubtitle = document.getElementById('headerSubtitle');
+            const authNavWrapper = document.getElementById('authNavWrapper');
+            const dashboardView = document.getElementById('dashboardView');
+            const tabLoginBtn = document.getElementById('tabLoginBtn');
+            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+            const loginTabContent = document.getElementById('loginTabContent');
+            const registerTabContent = document.getElementById('registerTabContent');
+
+            // Formulário Login
             const loginForm = document.getElementById('loginForm');
-            const emailInput = document.getElementById('emailInput');
-            const senhaInput = document.getElementById('senhaInput');
-            const togglePasswordBtn = document.getElementById('togglePasswordBtn');
-            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-            const submitBtn = document.getElementById('submitBtn');
-            const submitIcon = document.getElementById('submitIcon');
-            const submitText = document.getElementById('submitText');
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const rememberMe = document.getElementById('rememberMe');
+            const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+            const loginSubmitIcon = document.getElementById('loginSubmitIcon');
+            const loginSubmitText = document.getElementById('loginSubmitText');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+            // Formulário Cadastro
+            const registerForm = document.getElementById('registerForm');
+            const regName = document.getElementById('regName');
+            const regEmail = document.getElementById('regEmail');
+            const regRole = document.getElementById('regRole');
+            const regPassword = document.getElementById('regPassword');
+            const regConfirmPassword = document.getElementById('regConfirmPassword');
+            const registerSubmitBtn = document.getElementById('registerSubmitBtn');
+            const regSubmitIcon = document.getElementById('regSubmitIcon');
+            const regSubmitText = document.getElementById('regSubmitText');
+
+            // Elementos do Dashboard
+            const userAvatar = document.getElementById('userAvatar');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            const userRoleText = document.getElementById('userRoleText');
+            const userStatusDisplay = document.getElementById('userStatusDisplay');
+            const userIdDisplay = document.getElementById('userIdDisplay');
+            const userTokenDisplay = document.getElementById('userTokenDisplay');
+            const refreshMeBtn = document.getElementById('refreshMeBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            // Feedback e Status
             const feedbackAlert = document.getElementById('feedbackAlert');
             const feedbackIcon = document.getElementById('feedbackIcon');
             const feedbackMessage = document.getElementById('feedbackMessage');
-            const debugOutput = document.getElementById('debugOutput');
-            const httpStatusPill = document.getElementById('httpStatusPill');
-            const sessionBar = document.getElementById('sessionBar');
-            const sessionStatusText = document.getElementById('sessionStatusText');
-            const clearTokenBtn = document.getElementById('clearTokenBtn');
-            const modeButtons = document.querySelectorAll('.mode-btn');
+            const serverStatusDot = document.getElementById('serverStatusDot');
+            const serverStatusText = document.getElementById('serverStatusText');
 
-            let currentMode = 'auto';
+            // Alternância de abas Login / Cadastro
+            function switchTab(target) {
+                clearFeedback();
+                if (target === 'login') {
+                    tabLoginBtn.classList.add('active');
+                    tabLoginBtn.setAttribute('aria-selected', 'true');
+                    tabRegisterBtn.classList.remove('active');
+                    tabRegisterBtn.setAttribute('aria-selected', 'false');
+                    loginTabContent.classList.add('active');
+                    registerTabContent.classList.remove('active');
+                    headerTitle.textContent = 'Portal de Acesso';
+                    headerSubtitle.textContent = 'Informe suas credenciais para acessar o sistema';
+                } else {
+                    tabRegisterBtn.classList.add('active');
+                    tabRegisterBtn.setAttribute('aria-selected', 'true');
+                    tabLoginBtn.classList.remove('active');
+                    tabLoginBtn.setAttribute('aria-selected', 'false');
+                    registerTabContent.classList.add('active');
+                    loginTabContent.classList.remove('active');
+                    headerTitle.textContent = 'Criar Nova Conta';
+                    headerSubtitle.textContent = 'Cadastre-se para ter acesso ao ambiente educacional';
+                }
+            }
 
-            // Seleção de modo de envio
-            modeButtons.forEach((btn) => {
+            tabLoginBtn.addEventListener('click', () => switchTab('login'));
+            tabRegisterBtn.addEventListener('click', () => switchTab('register'));
+
+            // Toggle para visualização de senhas
+            document.querySelectorAll('.toggle-password').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    modeButtons.forEach((b) => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentMode = btn.getAttribute('data-mode') || 'auto';
+                    const targetId = btn.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    if (!input) return;
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    const icon = btn.querySelector('i');
+                    if (icon) {
+                        icon.className = isPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+                    }
                 });
             });
 
-            // Alternar visualização da senha
-            togglePasswordBtn.addEventListener('click', () => {
-                const isPassword = senhaInput.getAttribute('type') === 'password';
-                senhaInput.setAttribute('type', isPassword ? 'text' : 'password');
-                togglePasswordIcon.className = isPassword
-                    ? 'fa-regular fa-eye-slash'
-                    : 'fa-regular fa-eye';
-            });
-
-            // Funções seguras para localStorage (compatível com iframe sandbox)
-            function saveTokens(data) {
+            // Gerenciamento de Tokens
+            function setStoredToken(token, persistent) {
                 try {
-                    if (data && data.access_token) {
-                        localStorage.setItem('access_token', data.access_token);
-                        localStorage.setItem('token_type', data.token_type || 'bearer');
-                        updateSessionUI();
+                    if (persistent) {
+                        localStorage.setItem('access_token', token);
+                        sessionStorage.removeItem('access_token');
+                    } else {
+                        sessionStorage.setItem('access_token', token);
+                        localStorage.removeItem('access_token');
                     }
-                } catch (err) {
-                    // Ignora bloqueio de storage em sandbox restrito
+                } catch (e) {
+                    console.warn('Storage indisponível:', e);
                 }
             }
 
-            function clearTokens() {
+            function getStoredToken() {
+                try {
+                    return localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function removeStoredToken() {
                 try {
                     localStorage.removeItem('access_token');
-                    localStorage.removeItem('token_type');
-                } catch (err) {
-                    // Ignora erro
-                }
-                sessionBar.classList.remove('active');
-            }
-
-            function updateSessionUI() {
-                try {
-                    const token = localStorage.getItem('access_token');
-                    const type = localStorage.getItem('token_type') || 'bearer';
-                    if (token) {
-                        const preview = token.length > 20 ? token.substring(0, 20) + '...' : token;
-                        sessionStatusText.innerHTML = '<i class="fa-solid fa-key"></i> Sessão ativa (' + type + '): <code>' + preview + '</code>';
-                        sessionBar.classList.add('active');
-                    } else {
-                        sessionBar.classList.remove('active');
-                    }
-                } catch (err) {
-                    sessionBar.classList.remove('active');
+                    sessionStorage.removeItem('access_token');
+                } catch (e) {
+                    console.warn(e);
                 }
             }
 
-            clearTokenBtn.addEventListener('click', () => {
-                clearTokens();
-                showFeedback('success', 'Sessão local limpa com sucesso.');
-            });
-
+            // Exibição de alertas
             function showFeedback(type, message) {
                 feedbackAlert.className = 'feedback-alert show ' + type;
-                feedbackIcon.className = type === 'success'
-                    ? 'fa-solid fa-circle-check'
-                    : 'fa-solid fa-triangle-exclamation';
+                if (type === 'success') {
+                    feedbackIcon.className = 'fa-solid fa-circle-check';
+                } else if (type === 'error') {
+                    feedbackIcon.className = 'fa-solid fa-circle-exclamation';
+                } else {
+                    feedbackIcon.className = 'fa-solid fa-circle-info';
+                }
                 feedbackMessage.textContent = message;
             }
 
-            function setLoading(isLoading) {
-                submitBtn.disabled = isLoading;
-                if (isLoading) {
-                    submitIcon.className = 'fa-solid fa-spinner fa-spin';
-                    submitText.textContent = 'Autenticando...';
-                } else {
-                    submitIcon.className = 'fa-solid fa-right-to-bracket';
-                    submitText.textContent = 'Entrar no Sistema';
-                }
+            function clearFeedback() {
+                feedbackAlert.className = 'feedback-alert';
+                feedbackMessage.textContent = '';
             }
 
+            // Extração de mensagens de erro amigáveis do FastAPI
             function extractErrorMessage(data, status) {
-                if (!data) return 'Falha na autenticação (HTTP ' + status + ').';
+                if (!data) return 'Ocorreu um erro inesperado (Código ' + status + ').';
                 if (typeof data.detail === 'string') return data.detail;
                 if (Array.isArray(data.detail)) {
-                    return data.detail
-                        .map((item) => (item.msg ? item.msg + (item.loc ? ' (' + item.loc.join('.') + ')' : '') : JSON.stringify(item)))
-                        .join(' | ');
+                    return data.detail.map((err) => {
+                        const campo = err.loc ? err.loc[err.loc.length - 1] : 'campo';
+                        return campo + ': ' + (err.msg || 'inválido');
+                    }).join(' | ');
                 }
                 if (data.message) return data.message;
-                return 'Credenciais inválidas ou erro na requisição (HTTP ' + status + ').';
+                return 'Falha na requisição (HTTP ' + status + ').';
             }
 
-            async function sendJsonRequest(email, senha) {
-                return fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        senha: senha,
-                        username: email,
-                        password: senha
-                    })
-                });
+            // Renderizar Dashboard do Usuário
+            function showUserDashboard(user, token) {
+                authNavWrapper.style.display = 'none';
+                dashboardView.classList.add('active');
+
+                headerTitle.textContent = 'Painel Integrado';
+                headerSubtitle.textContent = 'Bem-vindo ao portal da Escola do Futuro';
+
+                // Iniciais do Avatar
+                const names = (user.name || 'Usuário').trim().split(' ');
+                const initials = names.length > 1 
+                    ? (names[0][0] + names[names.length - 1][0]).toUpperCase()
+                    : names[0].substring(0, 2).toUpperCase();
+
+                userAvatar.textContent = initials;
+                userNameDisplay.textContent = user.name || 'Usuário';
+                userEmailDisplay.textContent = user.email || '';
+                
+                const roleCapitalized = (user.role || 'Membro').charAt(0).toUpperCase() + (user.role || 'membro').slice(1);
+                userRoleText.textContent = roleCapitalized;
+                userIdDisplay.textContent = '#' + (user.id || '1');
+
+                if (token) {
+                    userTokenDisplay.textContent = token.substring(0, 16) + '...' + token.substring(token.length - 8);
+                }
             }
 
-            async function sendFormRequest(email, senha) {
-                const formBody = new URLSearchParams();
-                formBody.append('username', email);
-                formBody.append('password', senha);
-                formBody.append('email', email);
-                formBody.append('senha', senha);
-
-                return fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Accept': 'application/json'
-                    },
-                    body: formBody.toString()
-                });
+            // Renderizar Modo Não-Autenticado
+            function showAuthForms() {
+                authNavWrapper.style.display = 'block';
+                dashboardView.classList.remove('active');
+                switchTab('login');
             }
 
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const email = emailInput.value.trim();
-                const senha = senhaInput.value;
-
-                if (!email || !senha) {
-                    showFeedback('error', 'Por favor, preencha os campos de e-mail e senha.');
+            // Carregar dados do usuário logado via GET /auth/me
+            async function loadCurrentUser() {
+                const token = getStoredToken();
+                if (!token) {
+                    showAuthForms();
                     return;
                 }
 
-                setLoading(true);
-                feedbackAlert.className = 'feedback-alert';
-                httpStatusPill.className = 'status-pill';
-                httpStatusPill.textContent = 'Enviando...';
-
                 try {
-                    let response;
-                    let usedFormat = '';
-
-                    if (currentMode === 'json') {
-                        usedFormat = 'application/json';
-                        response = await sendJsonRequest(email, senha);
-                    } else if (currentMode === 'form') {
-                        usedFormat = 'application/x-www-form-urlencoded';
-                        response = await sendFormRequest(email, senha);
-                    } else {
-                        // Modo Auto: envia JSON primeiro ({ email, senha }) e faz fallback para OAuth2 form se 422/415
-                        usedFormat = 'application/json';
-                        response = await sendJsonRequest(email, senha);
-                        if (response.status === 422 || response.status === 415) {
-                            const fallbackResponse = await sendFormRequest(email, senha);
-                            if (fallbackResponse.ok || (fallbackResponse.status !== 422 && fallbackResponse.status !== 415)) {
-                                response = fallbackResponse;
-                                usedFormat = 'application/x-www-form-urlencoded (fallback)';
-                            }
+                    const response = await fetch(`${API_BASE}/auth/me`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Accept': 'application/json'
                         }
-                    }
-
-                    let data = null;
-                    const rawText = await response.text();
-                    try {
-                        data = rawText ? JSON.parse(rawText) : {};
-                    } catch (parseErr) {
-                        data = { raw_response: rawText };
-                    }
-
-                    httpStatusPill.textContent = 'HTTP ' + response.status + ' • ' + usedFormat;
-                    httpStatusPill.className = 'status-pill ' + (response.ok ? 'ok' : 'err');
-
-                    debugOutput.textContent = JSON.stringify(data, null, 2);
+                    });
 
                     if (response.ok) {
-                        saveTokens(data);
-                        showFeedback('success', 'Login bem-sucedido! Autenticação realizada com sucesso.');
+                        const userData = await response.json();
+                        showUserDashboard(userData, token);
                     } else {
-                        const errMsg = extractErrorMessage(data, response.status);
-                        showFeedback('error', 'Erro: ' + errMsg);
+                        // Token expirado ou inválido
+                        removeStoredToken();
+                        showAuthForms();
                     }
-                } catch (error) {
-                    httpStatusPill.textContent = 'Erro de Rede / CORS';
-                    httpStatusPill.className = 'status-pill err';
-                    debugOutput.textContent = JSON.stringify({
-                        erro: 'Falha ao conectar com ' + API_URL,
-                        detalhe: error && error.message ? error.message : String(error)
-                    }, null, 2);
-                    showFeedback('error', 'Erro de conexão com o servidor. Verifique sua rede ou a configuração de CORS da API.');
+                } catch (err) {
+                    console.warn('Erro ao verificar sessão:', err);
+                    showAuthForms();
+                }
+            }
+
+            // Verificação de Conexão com a API (Healthcheck)
+            async function checkServerHealth() {
+                try {
+                    const response = await fetch(`${API_BASE}/auth/health`);
+                    if (response.ok) {
+                        serverStatusDot.className = 'server-status-dot online';
+                        serverStatusText.textContent = 'API FastAPI Conectada (' + API_BASE.replace('http://', '').replace('https://', '') + ')';
+                    } else {
+                        serverStatusDot.className = 'server-status-dot offline';
+                        serverStatusText.textContent = 'API indisponível (HTTP ' + response.status + ')';
+                    }
+                } catch (e) {
+                    serverStatusDot.className = 'server-status-dot offline';
+                    serverStatusText.textContent = 'Aguardando inicialização do servidor FastAPI';
+                }
+            }
+
+            // SUBMIT: Login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearFeedback();
+
+                const email = loginEmail.value.trim();
+                const password = loginPassword.value;
+
+                if (!email || !password) {
+                    showFeedback('error', 'Por favor, informe seu e-mail e senha de acesso.');
+                    return;
+                }
+
+                loginSubmitBtn.disabled = true;
+                loginSubmitIcon.className = 'fa-solid fa-spinner fa-spin';
+                loginSubmitText.textContent = 'Autenticando...';
+
+                try {
+                    const response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email, password: password })
+                    });
+
+                    const data = await response.json().catch(() => ({}));
+
+                    if (response.ok && data.access_token) {
+                        setStoredToken(data.access_token, rememberMe.checked);
+                        showFeedback('success', 'Autenticação realizada com sucesso! Carregando painel...');
+                        
+                        setTimeout(() => {
+                            clearFeedback();
+                            if (data.user) {
+                                showUserDashboard(data.user, data.access_token);
+                            } else {
+                                loadCurrentUser();
+                            }
+                        }, 500);
+                    } else {
+                        const msg = extractErrorMessage(data, response.status);
+                        showFeedback('error', msg);
+                    }
+                } catch (err) {
+                    showFeedback('error', 'Não foi possível conectar ao servidor. Verifique se o FastAPI está em execução.');
                 } finally {
-                    setLoading(false);
+                    loginSubmitBtn.disabled = false;
+                    loginSubmitIcon.className = 'fa-solid fa-right-to-bracket';
+                    loginSubmitText.textContent = 'Entrar no Sistema';
                 }
             });
 
-            // Verifica se já há token salvo ao carregar
-            updateSessionUI();
+            // SUBMIT: Cadastro (Registro)
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearFeedback();
+
+                const name = regName.value.trim();
+                const email = regEmail.value.trim();
+                const role = regRole.value;
+                const password = regPassword.value;
+                const confirmPassword = regConfirmPassword.value;
+
+                if (!name || !email || !password) {
+                    showFeedback('error', 'Preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showFeedback('error', 'A senha deve ter no mínimo 6 caracteres.');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showFeedback('error', 'As senhas informadas não coincidem.');
+                    return;
+                }
+
+                registerSubmitBtn.disabled = true;
+                regSubmitIcon.className = 'fa-solid fa-spinner fa-spin';
+                regSubmitText.textContent = 'Criando conta...';
+
+                try {
+                    const response = await fetch(`${API_BASE}/auth/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            role: role,
+                            password: password
+                        })
+                    });
+
+                    const data = await response.json().catch(() => ({}));
+
+                    if (response.ok) {
+                        showFeedback('success', 'Conta criada com sucesso! Faça login com suas novas credenciais.');
+                        registerForm.reset();
+                        setTimeout(() => {
+                            switchTab('login');
+                            loginEmail.value = email;
+                            loginPassword.focus();
+                        }, 1200);
+                    } else {
+                        const msg = extractErrorMessage(data, response.status);
+                        showFeedback('error', msg);
+                    }
+                } catch (err) {
+                    showFeedback('error', 'Falha ao conectar ao servidor para criar conta.');
+                } finally {
+                    registerSubmitBtn.disabled = false;
+                    regSubmitIcon.className = 'fa-solid fa-user-plus';
+                    regSubmitText.textContent = 'Criar Minha Conta';
+                }
+            });
+
+            // Botão Atualizar Perfil (/auth/me)
+            refreshMeBtn.addEventListener('click', async () => {
+                const token = getStoredToken();
+                if (!token) return;
+
+                refreshMeBtn.disabled = true;
+                refreshMeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando...';
+
+                await loadCurrentUser();
+                showFeedback('info', 'Dados sincronizados com o servidor via endpoint /auth/me.');
+
+                setTimeout(() => {
+                    refreshMeBtn.disabled = false;
+                    refreshMeBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Atualizar Dados do Perfil (/auth/me)';
+                }, 400);
+            });
+
+            // Botão Logout
+            logoutBtn.addEventListener('click', async () => {
+                const token = getStoredToken();
+                if (token) {
+                    try {
+                        // Chamada opcional de notificação de logout no backend
+                        await fetch(`${API_BASE}/auth/logout`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                    } catch (e) {
+                        // Prossegue com logout local mesmo se a requisição falhar
+                    }
+                }
+                removeStoredToken();
+                showAuthForms();
+                showFeedback('info', 'Sessão encerrada com sucesso.');
+            });
+
+            // Link "Esqueceu a senha?"
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showFeedback('info', 'Para redefinição de senha, solicite ao administrador da EE Antonio Reginato ou use o usuário padrão admin@escola.sp.gov.br / admin123.');
+            });
+
+            // Inicialização ao carregar a página
+            checkServerHealth();
+            loadCurrentUser();
         })();
     </script>
 </body>
